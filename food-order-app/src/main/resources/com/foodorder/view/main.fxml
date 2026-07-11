@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.foodorder.controller.MainController"
+            prefWidth="900" prefHeight="600">
+    <padding>
+        <Insets top="15" right="15" bottom="15" left="15"/>
+    </padding>
+
+    <center>
+        <HBox spacing="15">
+            <!-- Catalog / menu -->
+            <VBox spacing="8" prefWidth="430">
+                <Label text="Menu" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <TableView fx:id="catalogTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="catalogIdCol" text="ID"/>
+                        <TableColumn fx:id="catalogNameCol" text="Name" prefWidth="150"/>
+                        <TableColumn fx:id="catalogPriceCol" text="Price"/>
+                        <TableColumn fx:id="catalogTypeCol" text="Type"/>
+                    </columns>
+                </TableView>
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="Qty:"/>
+                    <Spinner fx:id="qtySpinner" prefWidth="80" editable="true"/>
+                    <Button text="Add to cart" onAction="#handleAddToCart"/>
+                </HBox>
+            </VBox>
+
+            <!-- Cart -->
+            <VBox spacing="8" prefWidth="430">
+                <Label text="Cart" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <TableView fx:id="cartTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="cartIdCol" text="ID"/>
+                        <TableColumn fx:id="cartNameCol" text="Name" prefWidth="130"/>
+                        <TableColumn fx:id="cartPriceCol" text="Price"/>
+                        <TableColumn fx:id="cartAmountCol" text="Amount"/>
+                        <TableColumn fx:id="cartSubtotalCol" text="Subtotal"/>
+                    </columns>
+                </TableView>
+                <Button text="Remove selected" onAction="#handleRemoveFromCart"/>
+            </VBox>
+        </HBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <padding>
+                <Insets top="15" right="0" bottom="0" left="0"/>
+            </padding>
+            <Label fx:id="totalLabel" text="Total: 0 VND" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+            <Button text="Checkout &amp; Pay" style="-fx-font-size: 14px; -fx-padding: 8 20 8 20;" onAction="#handleCheckout"/>
+        </HBox>
+    </bottom>
+</BorderPane>
