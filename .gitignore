@@ -1,0 +1,4 @@
+food-order-app/target/
+food-order-app/tokens/
+food-order-app/src/main/resources/credentials.json
+.idea/

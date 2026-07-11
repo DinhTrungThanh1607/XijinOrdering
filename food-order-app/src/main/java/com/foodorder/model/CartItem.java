@@ -1,9 +1,6 @@
 package com.foodorder.model;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-
 public class CartItem {
     private final Item item;
     private final SimpleIntegerProperty amount;

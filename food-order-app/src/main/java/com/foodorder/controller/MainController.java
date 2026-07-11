@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable {
 
     // ==== CONFIG: replace with your own Google Sheet details ====
-    private static final String SPREADSHEET_ID = "YOUR_SPREADSHEET_ID_HERE";
+    private static final String SPREADSHEET_ID = "1U6Fzdi4HOnM-d54bbWC4lEPt5qW0fPWElZ7t26c8C0o";
     private static final String SHEET_NAME = "Invoices";
 
     @FXML private TableView<Item> catalogTable;
