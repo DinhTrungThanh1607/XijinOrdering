@@ -16,7 +16,7 @@ public class Main extends Application {
         Parent root = loader.load();
 
         Scene scene = new Scene(root);
-        stage.setTitle("Food Order App");
+        stage.setTitle("XijinOrdering");
         stage.setScene(scene);
         stage.show();
     }

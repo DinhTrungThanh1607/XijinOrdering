@@ -9,8 +9,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -40,16 +43,7 @@ public class MainController implements Initializable {
     @FXML private Spinner<Integer> qtySpinner;
     @FXML private Label totalLabel;
 
-    private final ObservableList<Item> catalog = FXCollections.observableArrayList(
-            new Item("F001", "Fried Rice", 35000, ItemType.FOOD),
-            new Item("F002", "Pho", 40000, ItemType.FOOD),
-            new Item("F003", "Spring Rolls", 25000, ItemType.FOOD),
-            new Item("D001", "Iced Coffee", 20000, ItemType.DRINK),
-            new Item("D002", "Milk Tea", 25000, ItemType.DRINK),
-            new Item("D003", "Orange Juice", 22000, ItemType.DRINK),
-            new Item("O001", "Extra Napkins", 2000, ItemType.OTHER),
-            new Item("O002", "Take-away Box", 3000, ItemType.OTHER)
-    );
+    private final ObservableList<Item> catalog = FXCollections.observableArrayList();
 
     private final ObservableList<CartItem> cart = FXCollections.observableArrayList();
     private final GoogleSheetsService sheetsService = new GoogleSheetsService(SPREADSHEET_ID, SHEET_NAME);
@@ -75,6 +69,22 @@ public class MainController implements Initializable {
         qtySpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99, 1));
 
         recalcTotal();
+    }
+
+    @FXML
+    private void handleRemoveMenuItem() {
+        Item selected = catalogTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert(Alert.AlertType.WARNING, "Please select an item in the menu first.");
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                "Remove \"" + selected.getName() + "\" (" + selected.getItemId() + ") from the menu?");
+        Optional<ButtonType> result = confirm.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            catalog.remove(selected);
+        }
     }
 
     @FXML
@@ -143,9 +153,114 @@ public class MainController implements Initializable {
         uploadThread.start();
     }
 
+    @FXML
+    private void handleAddNewItem() {
+        Dialog<Item> dialog = new Dialog<>();
+        dialog.setTitle("Add New Item to Menu");
+        dialog.setHeaderText("Enter the details of the new item");
+
+        ButtonType addButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
+
+        TextField nameField = new TextField();
+        nameField.setPromptText("e.g. Grilled Chicken");
+        TextField priceField = new TextField();
+        priceField.setPromptText("e.g. 45000");
+        ComboBox<ItemType> typeBox = new ComboBox<>(FXCollections.observableArrayList(ItemType.values()));
+        Label idPreviewLabel = new Label();
+        idPreviewLabel.setStyle("-fx-font-weight: bold;");
+
+        typeBox.valueProperty().addListener((obs, oldV, newV) ->
+                idPreviewLabel.setText(generateNextId(newV)));
+        typeBox.setValue(ItemType.FOOD);
+        idPreviewLabel.setText(generateNextId(typeBox.getValue()));
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 10, 10, 10));
+        grid.add(new Label("Type:"), 0, 0);
+        grid.add(typeBox, 1, 0);
+        grid.add(new Label("Item ID:"), 0, 1);
+        grid.add(idPreviewLabel, 1, 1);
+        grid.add(new Label("Name:"), 0, 2);
+        grid.add(nameField, 1, 2);
+        grid.add(new Label("Price (VND):"), 0, 3);
+        grid.add(priceField, 1, 3);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Disable "Add" until the required fields are filled in.
+        Node addButton = dialog.getDialogPane().lookupButton(addButtonType);
+        addButton.setDisable(true);
+        Runnable validate = () -> addButton.setDisable(
+                nameField.getText().trim().isEmpty() || priceField.getText().trim().isEmpty());
+        nameField.textProperty().addListener((obs, oldV, newV) -> validate.run());
+        priceField.textProperty().addListener((obs, oldV, newV) -> validate.run());
+
+        dialog.setResultConverter(buttonType -> {
+            if (buttonType == addButtonType) {
+                String name = nameField.getText().trim();
+                String priceText = priceField.getText().trim();
+
+                double price;
+                try {
+                    price = Double.parseDouble(priceText);
+                } catch (NumberFormatException ex) {
+                    showAlert(Alert.AlertType.ERROR, "Price must be a valid number.");
+                    return null;
+                }
+                if (price <= 0) {
+                    showAlert(Alert.AlertType.ERROR, "Price must be greater than 0.");
+                    return null;
+                }
+
+                // Recompute the ID at confirm time in case anything changed.
+                String id = generateNextId(typeBox.getValue());
+                return new Item(id, name, price, typeBox.getValue());
+            }
+            return null;
+        });
+
+        Optional<Item> result = dialog.showAndWait();
+        result.ifPresent(item -> {
+            catalog.add(item);
+            catalogTable.getSelectionModel().select(item);
+            catalogTable.scrollTo(item);
+        });
+    }
+
+    /**
+     * Generates the next itemId for a given type, e.g. FOOD -> F001, F002, ...
+     * DRINK -> D001, D002, ... OTHER -> O001, O002, ...
+     * Scans the current catalog for the highest existing number with that
+     * type's prefix and returns prefix + (max + 1), zero-padded to 3 digits.
+     */
+    private String generateNextId(ItemType type) {
+        String prefix = switch (type) {
+            case FOOD -> "F";
+            case DRINK -> "D";
+            case OTHER -> "O";
+        };
+
+        int maxNum = 0;
+        for (Item item : catalog) {
+            String id = item.getItemId();
+            if (id != null && id.startsWith(prefix)) {
+                try {
+                    int num = Integer.parseInt(id.substring(prefix.length()));
+                    maxNum = Math.max(maxNum, num);
+                } catch (NumberFormatException ignored) {
+                    // itemId with that prefix but non-numeric suffix; skip it
+                }
+            }
+        }
+        return prefix + String.format("%03d", maxNum + 1);
+    }
+
     private void recalcTotal() {
         double total = cart.stream().mapToDouble(CartItem::getSubtotal).sum();
-        totalLabel.setText(String.format("Total: %,.0f VND", total));
+        totalLabel.setText(String.format("%,.0f VND", total));
     }
 
     private void showAlert(Alert.AlertType type, String message) {
