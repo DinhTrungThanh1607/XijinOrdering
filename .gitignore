@@ -1,4 +1,7 @@
 food-order-app/target/
 food-order-app/tokens/
 food-order-app/src/main/resources/credentials.json
+food-order-app/config.properties
+food-order-app/xijinordering.db
+food-order-app/item-images/
 .idea/
