@@ -1,0 +1,31 @@
+name: CI Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: food-order-app
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      # We only compile here, not run the app: GitHub's runners have no
+      # display, and a JavaFX GUI app can't open a window in that
+      # environment. Compiling successfully is enough to catch build errors.
+      - name: Compile with Maven
+        run: mvn -B clean compile

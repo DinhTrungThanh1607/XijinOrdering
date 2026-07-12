@@ -42,6 +42,12 @@
                 <Circle radius="4" styleClass="status-dot"/>
                 <Label text="We are Open" styleClass="status-text"/>
             </HBox>
+
+            <Button text="⚙ Settings" onAction="#handleOpenSettings" styleClass="btn-settings">
+                <HBox.margin>
+                    <Insets left="12"/>
+                </HBox.margin>
+            </Button>
         </HBox>
     </top>
 
@@ -66,6 +72,7 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                     </columnResizePolicy>
                     <columns>
+                        <TableColumn fx:id="catalogImageCol" text="" minWidth="50" maxWidth="50" sortable="false"/>
                         <TableColumn fx:id="catalogIdCol" text="#" minWidth="40" maxWidth="55"/>
                         <TableColumn fx:id="catalogNameCol" text="Item Name" prefWidth="200"/>
                         <TableColumn fx:id="catalogPriceCol" text="Price" minWidth="90"/>

@@ -52,12 +52,28 @@ public class GoogleSheetsService {
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    private final String spreadsheetId;
-    private final String sheetName;
+    private String spreadsheetId;
+    private String sheetName;
     private Sheets sheetsService;
 
     public GoogleSheetsService(String spreadsheetId, String sheetName) {
         this.spreadsheetId = spreadsheetId;
+        this.sheetName = sheetName;
+    }
+
+    public String getSpreadsheetId() {
+        return spreadsheetId;
+    }
+
+    public void setSpreadsheetId(String spreadsheetId) {
+        this.spreadsheetId = spreadsheetId;
+    }
+
+    public String getSheetName() {
+        return sheetName;
+    }
+
+    public void setSheetName(String sheetName) {
         this.sheetName = sheetName;
     }
 

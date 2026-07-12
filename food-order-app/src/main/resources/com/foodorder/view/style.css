@@ -76,6 +76,22 @@
     -fx-font-weight: 600;
 }
 
+.btn-settings {
+    -fx-background-color: rgba(255,255,255,0.18);
+    -fx-text-fill: white;
+    -fx-border-color: rgba(255,255,255,0.35);
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+    -fx-border-width: 1;
+    -fx-padding: 5 14;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+}
+
+.btn-settings:hover {
+    -fx-background-color: rgba(255,255,255,0.3);
+}
+
 /* ===== MAIN CONTENT ===== */
 .main-content {
     -fx-background-color: transparent;
@@ -460,6 +476,88 @@
     -fx-padding: 0 0 0 3;
 }
 
+/* ===== APP DIALOG (popups) ===== */
+.app-dialog {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: rgba(255,107,53,0.12);
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 24, 0, 0, 8);
+}
+
+.app-dialog .header-panel {
+    -fx-background-color: linear-gradient(to right, #FF8C42, #FF6B35);
+    -fx-background-radius: 16 16 0 0;
+    -fx-padding: 16 20;
+}
+
+.app-dialog .header-panel .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.app-dialog .content.label {
+    -fx-text-fill: #718096;
+    -fx-font-size: 12px;
+    -fx-padding: 4 0 0 0;
+}
+
+.app-dialog .button-bar .button {
+    -fx-background-radius: 10;
+    -fx-font-weight: 600;
+    -fx-background-color: linear-gradient(to bottom, #FF8C42, #FF6B35);
+    -fx-text-fill: white;
+    -fx-padding: 8 20;
+}
+
+.app-dialog .button-bar .button:hover {
+    -fx-background-color: linear-gradient(to bottom, #FF9E5E, #FF8C42);
+}
+
+.app-dialog .button-bar .button:cancel {
+    -fx-background-color: #F7F8FA;
+    -fx-text-fill: #718096;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+.app-dialog .button-bar .button:cancel:hover {
+    -fx-background-color: #EDF2F7;
+}
+
+/* Bigger, roomier badge when used inside dialogs (e.g. Item ID preview) */
+.app-dialog .type-badge {
+    -fx-padding: 6 14;
+    -fx-background-radius: 14;
+    -fx-font-size: 12px;
+}
+
+/* ===== TYPE BADGES (Food/Drink/Other) ===== */
+.type-badge {
+    -fx-padding: 3 10;
+    -fx-background-radius: 12;
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+}
+
+.type-badge-food {
+    -fx-background-color: #C6F6D5;
+    -fx-text-fill: #276749;
+}
+
+.type-badge-drink {
+    -fx-background-color: #BEE3F8;
+    -fx-text-fill: #2C5282;
+}
+
+.type-badge-other {
+    -fx-background-color: #E9D8FD;
+    -fx-text-fill: #553C9A;
+}
+
 /* ===== TEXT FIELDS & COMBOBOX ===== */
 .text-field, .combo-box {
     -fx-background-color: white;
@@ -499,42 +597,6 @@
 
 .combo-box-popup .list-view .list-cell:selected {
     -fx-background-color: rgba(255,140,66,0.1);
-}
-
-/* ===== DIALOG ===== */
-.dialog-pane {
-    -fx-background-color: white;
-    -fx-border-color: #E2E8F0;
-    -fx-border-radius: 14;
-    -fx-background-radius: 14;
-}
-
-.dialog-pane .header-panel {
-    -fx-background-color: linear-gradient(to right, #FF8C42, #FF6B35);
-    -fx-background-radius: 14 14 0 0;
-    -fx-padding: 12 16;
-}
-
-.dialog-pane .header-panel .label {
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 14px;
-}
-
-.dialog-pane .content.label {
-    -fx-text-fill: #4A5568;
-    -fx-font-size: 12px;
-}
-
-.dialog-pane .button-bar .button {
-    -fx-background-radius: 8;
-    -fx-font-weight: 600;
-    -fx-background-color: #FF8C42;
-    -fx-text-fill: white;
-}
-
-.dialog-pane .button-bar .button:hover {
-    -fx-background-color: #FF9E5E;
 }
 
 /* ===== TOOLTIP ===== */
